@@ -1372,94 +1372,96 @@ export function SearchPage() {
   };
 
   return (
-    <div className="sacred-surface min-h-screen px-4 py-8 md:px-8">
+    <div className="sacred-surface min-h-screen px-3 py-6 md:px-8 md:py-8">
       <Breadcrumbs items={[{ label: "Home", to: "/" }, { label: "Search", to: "/search" }]} />
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <h1 className="font-heading text-4xl text-[var(--text-secondary)]">Universal Hub Search</h1>
-        <div className="flex items-center gap-2 text-xs font-bold text-[var(--text-primary)]/40 uppercase tracking-widest">
-          <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4">
+        <h1 className="font-heading text-3xl md:text-4xl text-[var(--text-secondary)]">Universal Hub Search</h1>
+        <div className="flex items-center gap-2 text-[10px] md:text-xs font-bold text-[var(--text-primary)]/40 uppercase tracking-widest">
+          <div className="h-1.5 w-1.5 md:h-2 md:w-2 rounded-full bg-emerald-500 animate-pulse"></div>
           Live Site Index
         </div>
       </div>
       
       <div className="mt-6 space-y-4">
         <div className="relative group">
-          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-            <Search className="h-5 w-5 text-[var(--text-primary)]/30 group-focus-within:text-[var(--accent)] transition-colors" />
+          <div className="absolute inset-y-0 left-0 pl-3 md:pl-4 flex items-center pointer-events-none">
+            <Search className="h-4 w-4 md:h-5 md:w-5 text-[var(--text-primary)]/30 group-focus-within:text-[var(--accent)] transition-colors" />
           </div>
           <input 
             value={query} 
             onChange={(event) => setQuery(event.target.value)} 
-            placeholder="Search EVERYTHING: saints, verses, prayers, guides, chant, tabs..." 
-            className="w-full rounded-2xl border border-[var(--border)]/50 bg-[var(--card)] py-5 pl-12 pr-4 text-xl outline-none focus:border-[var(--accent)] focus:ring-4 focus:ring-[var(--accent)]/10 transition-all placeholder:text-[var(--text-primary)]/20 shadow-sm" 
+            placeholder="Search EVERYTHING..." 
+            className="w-full rounded-xl md:rounded-2xl border border-[var(--border)]/50 bg-[var(--card)] py-4 md:py-5 pl-10 md:pl-12 pr-4 text-base md:text-xl outline-none focus:border-[var(--accent)] focus:ring-4 focus:ring-[var(--accent)]/10 transition-all placeholder:text-[var(--text-primary)]/20 shadow-sm" 
           />
         </div>
         
-        <div className="flex flex-wrap gap-6 items-center px-2">
-          <label className="flex items-center gap-2 text-sm font-medium cursor-pointer text-[var(--text-primary)]/70 hover:text-[var(--text-primary)] transition-colors">
+        <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-6 sm:items-center px-2">
+          <label className="flex items-center gap-2 text-xs md:text-sm font-medium cursor-pointer text-[var(--text-primary)]/70 hover:text-[var(--text-primary)] transition-colors">
             <input 
               type="checkbox" 
               checked={includeBible} 
               onChange={(e) => setIncludeBible(e.target.checked)}
-              className="w-4 h-4 rounded border-[var(--border)] text-[var(--accent)] focus:ring-[var(--accent)]"
+              className="w-3.5 h-3.5 md:w-4 md:h-4 rounded border-[var(--border)] text-[var(--accent)] focus:ring-[var(--accent)]"
             />
             Deep Bible Search
           </label>
-          <div className="h-4 w-px bg-[var(--border)]/30 hidden sm:block"></div>
-          <p className="text-xs text-[var(--text-primary)]/50 font-medium">
+          <div className="hidden sm:block h-4 w-px bg-[var(--border)]/30"></div>
+          <p className="text-[10px] md:text-xs text-[var(--text-primary)]/50 font-medium">
             Indexing {allSearchItems.length} curated spiritual resources
           </p>
         </div>
       </div>
 
       {isSearchingBible && (
-        <div className="mt-8 flex items-center gap-3 text-[var(--text-secondary)] animate-pulse justify-center py-4 bg-[var(--card)]/30 rounded-xl border border-dashed border-[var(--border)]/30">
-          <Timer className="h-5 w-5 animate-spin" />
-          <span className="text-sm font-heading tracking-widest uppercase">Consulting Holy Tradition...</span>
+        <div className="mt-8 flex items-center gap-2 md:gap-3 text-[var(--text-secondary)] animate-pulse justify-center py-3 md:py-4 bg-[var(--card)]/30 rounded-lg md:rounded-xl border border-dashed border-[var(--border)]/30">
+          <Timer className="h-4 w-4 md:h-5 md:w-5 animate-spin" />
+          <span className="text-[10px] md:text-sm font-heading tracking-widest uppercase">Consulting Holy Tradition...</span>
         </div>
       )}
 
-      <div className="mt-12 space-y-12 pb-24">
+      <div className="mt-10 md:mt-12 space-y-8 md:space-y-12 pb-24">
         {Object.entries(grouped).length > 0 ? (
           Object.entries(grouped).map(([category, items]) => (
             <div key={category} className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="flex items-center gap-2 bg-[var(--card)] px-4 py-2 rounded-full border border-[var(--border)]/30 shadow-sm">
-                  {getIcon(category)}
-                  <h2 className="font-heading text-sm font-bold uppercase tracking-widest text-[var(--text-secondary)]">
+              <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
+                <div className="flex items-center gap-2 bg-[var(--card)] px-3 md:px-4 py-1.5 md:py-2 rounded-full border border-[var(--border)]/30 shadow-sm shrink-0">
+                  <div className="scale-90 md:scale-100">
+                    {getIcon(category)}
+                  </div>
+                  <h2 className="font-heading text-[10px] md:text-sm font-bold uppercase tracking-widest text-[var(--text-secondary)]">
                     {category}
                   </h2>
                 </div>
                 <div className="h-px flex-1 bg-gradient-to-r from-[var(--border)]/30 to-transparent"></div>
               </div>
               
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <div className="grid gap-3 md:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {items.map((item, idx) => (
                   <Link 
                     key={`${item.path}-${idx}`} 
                     to={item.path} 
                     className="group block"
                   >
-                    <Card className="h-full hover:border-[var(--accent)] transition-all hover:-translate-y-1 bg-[var(--card)]/40 backdrop-blur-md border-[var(--border)]/20 hover:shadow-xl flex flex-col">
+                    <Card className="h-full hover:border-[var(--accent)] transition-all hover:-translate-y-1 bg-[var(--card)]/40 backdrop-blur-md border-[var(--border)]/20 hover:shadow-xl flex flex-col p-4 md:p-5">
                       <div className="flex-1">
                         <div className="flex items-start justify-between gap-2">
-                          <h3 className="font-heading text-lg text-[var(--text-secondary)] group-hover:text-[var(--accent)] transition-colors line-clamp-2 leading-tight">
+                          <h3 className="font-heading text-base md:text-lg text-[var(--text-secondary)] group-hover:text-[var(--accent)] transition-colors line-clamp-2 leading-tight">
                             {item.title}
                           </h3>
-                          <ExternalLink className="h-3 w-3 text-[var(--accent)] opacity-0 group-hover:opacity-100 transition-all" />
+                          <ExternalLink className="h-3 w-3 text-[var(--accent)] opacity-0 group-hover:opacity-100 transition-all shrink-0 mt-1" />
                         </div>
                         {item.snippet && (
-                          <p className="mt-3 text-xs text-[var(--text-primary)]/70 line-clamp-4 leading-relaxed font-medium">
+                          <p className="mt-2 md:mt-3 text-[11px] md:text-xs text-[var(--text-primary)]/70 line-clamp-3 md:line-clamp-4 leading-relaxed font-medium">
                             {item.snippet}
                           </p>
                         )}
                       </div>
                       
                       <div className="mt-4 pt-4 border-t border-[var(--border)]/10 flex items-center justify-between">
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-primary)]/30 group-hover:text-[var(--accent)] transition-colors">
+                        <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-[var(--text-primary)]/30 group-hover:text-[var(--accent)] transition-colors">
                           Access Resource
                         </span>
-                        <div className="bg-[var(--accent)]/5 p-1.5 rounded-lg group-hover:bg-[var(--accent)]/10 transition-colors">
+                        <div className="bg-[var(--accent)]/5 p-1.5 rounded-lg group-hover:bg-[var(--accent)]/10 transition-colors scale-90 md:scale-100">
                           {getIcon(category)}
                         </div>
                       </div>
@@ -1470,12 +1472,12 @@ export function SearchPage() {
             </div>
           ))
         ) : query.length >= 2 && !isSearchingBible && (
-          <div className="flex flex-col items-center justify-center py-32 text-center animate-in zoom-in duration-300">
-            <div className="h-24 w-24 rounded-full bg-[var(--card)] flex items-center justify-center mb-6 shadow-inner border border-[var(--border)]/30">
-              <Search className="h-10 w-10 text-[var(--text-primary)]/10" />
+          <div className="flex flex-col items-center justify-center py-20 md:py-32 text-center animate-in zoom-in duration-300 px-4">
+            <div className="h-16 w-16 md:h-24 md:w-24 rounded-full bg-[var(--card)] flex items-center justify-center mb-4 md:mb-6 shadow-inner border border-[var(--border)]/30">
+              <Search className="h-6 w-6 md:h-10 md:w-10 text-[var(--text-primary)]/10" />
             </div>
-            <h3 className="text-2xl font-heading text-[var(--text-secondary)]">No matches found</h3>
-            <p className="mt-2 text-[var(--text-primary)]/40 max-w-md mx-auto">
+            <h3 className="text-xl md:text-2xl font-heading text-[var(--text-secondary)]">No matches found</h3>
+            <p className="mt-2 text-xs md:text-sm text-[var(--text-primary)]/40 max-w-xs md:max-w-md mx-auto leading-relaxed">
               We couldn't find any spiritual resources matching your search. Try adjusting your query or exploring categories directly.
             </p>
           </div>
