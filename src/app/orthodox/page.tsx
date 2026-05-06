@@ -1,91 +1,104 @@
-import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import Card from "../components/Card";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import SectionDivider from "../components/SectionDivider";
+import Breadcrumbs from "../../components/Breadcrumbs";
+import Card from "../../components/Card";
+import SectionDivider from "../../components/SectionDivider";
+import { orthodoxSections } from "../siteData";
 
-export default function LandingPage() {
+export default function OrthodoxDashboardPage() {
   const { t } = useTranslation();
 
+  const getSectionKey = (title: string) => {
+    return `sections.${title.toLowerCase().replace(/ & /g, '_').replace(/ /g, '_').replace(/'/g, '')}`;
+  };
+
   return (
-    <div className="sacred-surface min-h-screen">
-      <Header />
-      <main>
-        <section className="smoke-background relative flex min-h-[92vh] items-center justify-center px-4 text-center">
-          <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-4xl">
-            <div className="mb-6 text-7xl text-[var(--text-secondary)] drop-shadow-[0_0_18px_rgba(201,168,76,0.45)] md:text-9xl">✠</div>
-            <p className="font-accent text-xl text-[var(--text-secondary)]">{t('landing.tagline')}</p>
-            <h1 className="font-heading text-5xl leading-tight md:text-7xl">{t('landing.title')}</h1>
-            <p className="mx-auto mt-5 max-w-2xl text-xl text-[var(--text-primary)]/92">
-              {t('landing.description')}
-            </p>
-            <div className="mt-10 flex flex-wrap justify-center gap-4">
-              <Link
-                to="/orthodox"
-                className="rounded-xl px-6 py-4 text-lg font-semibold text-white shadow-lg"
-                style={{ backgroundImage: "linear-gradient(90deg, var(--button-from), var(--button-to))" }}
-              >
-                {t('landing.enter_orthodox')}
-              </Link>
-              <Link
-                to="/catholic"
-                className="rounded-xl border border-[var(--border)] px-6 py-4 text-lg font-semibold text-[var(--text-primary)]"
-              >
-                {t('landing.enter_catholic')}
-              </Link>
+    <main className="orthodox-pattern min-h-screen px-4 py-8 md:px-8">
+      <Breadcrumbs items={[{ label: t('nav.home'), to: "/" }, { label: t('nav.orthodox'), to: "/orthodox" }]} />
+      <h1 className="font-heading text-4xl text-[var(--text-secondary)] md:text-5xl">{t('orthodox_page.title')}</h1>
+      <p className="mt-3 max-w-3xl text-lg text-[var(--text-primary)]/88">
+        {t('orthodox_page.description')}
+      </p>
+
+      <div className="mt-10 space-y-12">
+        {orthodoxSections.map((section) => (
+          <section key={section.path}>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="rounded-full bg-[var(--accent)]/10 p-2 text-[var(--accent)]">
+                <section.icon size={24} />
+              </div>
+              <h2 className="font-heading text-2xl text-[var(--text-secondary)]">{t(getSectionKey(section.title))}</h2>
             </div>
-            <Link to="/shared" className="mt-6 inline-block text-[var(--text-secondary)] underline underline-offset-4">
-              {t('landing.explore_shared')}
-            </Link>
-          </motion.div>
-        </section>
+            
+            <div className="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(280px,1fr))]">
+              {section.subItems.map((item) => {
+                // Logic to determine the correct sub-path
+                let itemPath = section.path;
+                const slug = item.toLowerCase().replace(/ & /g, "-").replace(/\s+/g, "-").replace(/[()]/g, "").replace(/:/g, "");
+                
+                // Special mapping for specific items to ensure correct routing
+                if (section.title === "Holy Scripture") {
+                  if (item === "Septuagint Old Testament") itemPath = `${section.path}/septuagint-old-testament`;
+                  if (item === "New Testament") itemPath = `${section.path}/new-testament`;
+                  if (item === "Daily Scripture Readings") itemPath = `${section.path}/daily-readings`;
+                  if (item === "Commandments") itemPath = `${section.path}/commandments`;
+                } else if (section.title === "Liturgical Calendar") {
+                  if (item === "Greek Orthodox Calendar") itemPath = `${section.path}/greek-orthodox`;
+                  if (item === "Serbian Orthodox Calendar") itemPath = `${section.path}/serbian-orthodox`;
+                  if (item === "Russian Orthodox Calendar") itemPath = `${section.path}/russian-orthodox`;
+                  if (item === "Armenian Apostolic Calendar") itemPath = `${section.path}/armenian-orthodox`;
+                  if (item === "Antiochian Orthodox Calendar") itemPath = `${section.path}/antiochian-orthodox`;
+                  if (item === "Fasting Calendar") itemPath = `${section.path}/fasting-calendar`;
+                  if (item === "Feast Days & Saints") itemPath = `${section.path}/feast-days-saints`;
+                  if (item === "Pascha Calculator") itemPath = `${section.path}/pascha-calculator`;
+                } else if (section.title === "Prayer Book") {
+                  if (item === "Morning Prayers") itemPath = `${section.path}/morning-prayers`;
+                  if (item === "Evening Prayers") itemPath = `${section.path}/evening-prayers`;
+                  if (item === "Midnight Office") itemPath = `${section.path}/midnight-office`;
+                  if (item === "Akathist Hymns") itemPath = `${section.path}/akathist-hymns`;
+                } else if (section.title === "Iconography") {
+                  if (item === "Icon Gallery") itemPath = `${section.path}/icon-gallery`;
+                  if (item === "Theology of Icons") itemPath = `${section.path}/theology-of-icons`;
+                  if (item === "Iconography by Tradition") itemPath = `${section.path}/iconography-by-tradition`;
+                  if (item === "Miraculous Icons") itemPath = `${section.path}/miraculous-icons`;
+                  if (item === "Home Icon Corner Guide") itemPath = `${section.path}/home-icon-corner-guide`;
+                } else if (section.title === "Catechism & Teaching") {
+                  if (item === "What is Orthodoxy?") itemPath = `${section.path}/what-is-orthodoxy`;
+                  if (item === "Seven Ecumenical Councils") itemPath = `${section.path}/councils`;
+                  if (item === "Church Fathers Library") itemPath = `${section.path}/fathers`;
+                  if (item === "Philokalia Excerpts") itemPath = `${section.path}/philokalia`;
+                  if (item === "Holy Mysteries (Sacraments)") itemPath = `${section.path}`;
+                  if (item === "Jurisdictional Differences") itemPath = `${section.path}/jurisdictions`;
+                  if (item === "Convert's Guide") itemPath = `${section.path}/convert-guide`;
+                } else if (section.title === "Saints") {
+                  if (item === "Lives of the Saints (Synaxarion)") itemPath = `${section.path}/synaxarion`;
+                  if (item === "Saint of the Day") itemPath = `${section.path}/saint-of-the-day`;
+                  if (item === "Name Saint") itemPath = `${section.path}/name-day-lookup`;
+                  if (item === "Patron Saints") itemPath = `${section.path}/patron-saints`;
+                } else if (section.title === "Divine Liturgy") {
+                  if (item === "Liturgy of St. John Chrysostom") itemPath = `${section.path}/st-john-chrysostom`;
+                  if (item === "Liturgy of St. Basil the Great") itemPath = `${section.path}/st-basil-the-great`;
+                  if (item === "Liturgy of St. James") itemPath = `${section.path}/st-james`;
+                  if (item === "Presanctified Liturgy") itemPath = `${section.path}/presanctified`;
+                  if (item === "Armenian Badarak") itemPath = `${section.path}/armenian-badarak`;
+                  if (item === "Liturgical Texts (Original + English)") itemPath = `${section.path}/liturgical-texts`;
+                } else if (section.title === "Hymns & Chant") {
+                   // Add specific chant routing if needed, otherwise default to section path
+                }
 
-        <section className="mx-auto max-w-7xl px-4 py-16">
-          <h2 className="font-heading text-3xl text-[var(--text-secondary)]">{t('landing.dialogue_title')}</h2>
-          <p className="mt-2 max-w-3xl text-lg text-[var(--text-primary)]/86">{t('landing.dialogue_desc')}</p>
-          <div className="mt-6 grid gap-4 md:grid-cols-3">
-            <Link to="/orthodox">
-              <Card>
-                <h3 className="font-heading text-xl text-[var(--text-secondary)]">{t('landing.orthodox_card_title')}</h3>
-                <p className="mt-2 text-[var(--text-primary)]/85">{t('landing.orthodox_card_desc')}</p>
-              </Card>
-            </Link>
-            <Link to="/catholic">
-              <Card>
-                <h3 className="font-heading text-xl text-[var(--text-secondary)]">{t('landing.catholic_card_title')}</h3>
-                <p className="mt-2 text-[var(--text-primary)]/85">{t('landing.catholic_card_desc')}</p>
-              </Card>
-            </Link>
-            <Link to="/shared">
-              <Card>
-                <h3 className="font-heading text-xl text-[var(--text-secondary)]">{t('landing.shared_card_title')}</h3>
-                <p className="mt-2 text-[var(--text-primary)]/85">{t('landing.shared_card_desc')}</p>
-              </Card>
-            </Link>
-          </div>
-        </section>
-
-        <section className="mx-auto max-w-7xl px-4 pb-20">
-          <SectionDivider label={t('landing.highlights_title')} />
-          <div className="grid gap-4 md:grid-cols-3">
-            <Card>
-              <h3 className="font-heading text-lg text-[var(--text-secondary)]">{t('landing.saint_title')}</h3>
-              <p className="mt-2">St. John Chrysostom: Teacher of repentance, mercy, and liturgical beauty.</p>
-            </Card>
-            <Card>
-              <h3 className="font-heading text-lg text-[var(--text-secondary)]">{t('landing.scripture_title')}</h3>
-              <p className="mt-2">John 1:1-18 and Psalm 51. "Create in me a clean heart, O God."</p>
-            </Card>
-            <Card>
-              <h3 className="font-heading text-lg text-[var(--text-secondary)]">{t('landing.fasting_title')}</h3>
-              <p className="mt-2">{t('landing.fasting_desc')}</p>
-            </Card>
-          </div>
-        </section>
-      </main>
-      <Footer />
-    </div>
+                return (
+                  <Card key={item} className="group hover:border-[var(--accent)] transition-all">
+                    <Link to={itemPath} className="flex h-full flex-col p-2">
+                      <span className="font-heading text-lg text-[var(--text-secondary)] group-hover:text-[var(--accent)]">{item}</span>
+                      <span className="mt-1 text-sm text-[var(--text-primary)]/70">Explore {item.toLowerCase()} resources.</span>
+                    </Link>
+                  </Card>
+                );
+              })}
+            </div>
+          </section>
+        ))}
+      </div>
+    </main>
   );
 }
