@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { Link, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import Breadcrumbs from "../components/Breadcrumbs";
 import Card from "../components/Card";
 import CrossReferenceLink from "../components/CrossReference";
@@ -89,14 +90,15 @@ function relatedCards(paths: string[]) {
 }
 
 export function SaintDetailPage({ tradition }: { tradition: "orthodox" | "catholic" }) {
+  const { t } = useTranslation();
   const { saintSlug } = useParams();
   const saint = findSaint(saintSlug ?? "", tradition);
   if (!saint) return <NotFoundContent title="Saint not found" />;
 
   const crumbs = [
-    { label: "Home", to: "/" },
-    { label: tradition === "orthodox" ? "Orthodox" : "Catholic", to: `/${tradition}` },
-    { label: "Saints", to: `/${tradition}/saints` },
+    { label: t('nav.home'), to: "/" },
+    { label: tradition === "orthodox" ? t('nav.orthodox') : t('nav.catholic'), to: `/${tradition}` },
+    { label: t('sections.saints'), to: `/${tradition}/saints` },
     { label: saint.name, to: `/${tradition}/saints/${saint.slug}` },
   ];
 
@@ -223,6 +225,7 @@ export function SharedRelatedSection() {
 }
 
 export function PrayerDetailPage({ tradition }: { tradition: "orthodox" | "catholic" }) {
+  const { t } = useTranslation();
   const { prayerSlug } = useParams();
   const prayer = prayerByTradition(tradition).find((item) => item.slug === prayerSlug);
   if (!prayer) return <NotFoundContent title="Prayer not found" />;
@@ -241,9 +244,9 @@ export function PrayerDetailPage({ tradition }: { tradition: "orthodox" | "catho
     <main className="prayer-print-page px-4 py-8 md:px-8">
       <Breadcrumbs
         items={[
-          { label: "Home", to: "/" },
-          { label: tradition === "orthodox" ? "Orthodox" : "Catholic", to: `/${tradition}` },
-          { label: "Prayers", to: `/${tradition}/prayers` },
+          { label: t('nav.home'), to: "/" },
+          { label: tradition === "orthodox" ? t('nav.orthodox') : t('nav.catholic'), to: `/${tradition}` },
+          { label: t('sections.prayer_book'), to: `/${tradition}/prayers` },
           { label: prayer.title, to: `/${tradition}/prayers/${prayer.slug}` },
         ]}
       />
@@ -545,6 +548,7 @@ const ntSlugs = new Set([
 ]);
 
 export function ScriptureReader({ tradition }: { tradition: "orthodox" | "catholic" }) {
+  const { t } = useTranslation();
   const { bookSlug, chapterNumber } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -857,9 +861,9 @@ export function ScriptureReader({ tradition }: { tradition: "orthodox" | "cathol
     <main className="scripture-print-page px-4 py-8 md:px-8">
       <Breadcrumbs
         items={[
-          { label: "Home", to: "/" },
-          { label: tradition === "orthodox" ? "Orthodox" : "Catholic", to: `/${tradition}` },
-          { label: "Scripture", to: `/${tradition}/scripture` },
+          { label: t('nav.home'), to: "/" },
+          { label: tradition === "orthodox" ? t('nav.orthodox') : t('nav.catholic'), to: `/${tradition}` },
+          { label: t('sections.holy_scripture'), to: `/${tradition}/scripture` },
           { label: "Reader", to: `/${tradition}/scripture/reader` },
         ]}
       />
@@ -1102,6 +1106,7 @@ export function ScriptureReader({ tradition }: { tradition: "orthodox" | "cathol
 }
 
 export function TodayDashboard({ tradition }: { tradition: "orthodox" | "catholic" }) {
+  const { t } = useTranslation();
   const today = new Date();
   const saint = (tradition === "orthodox" ? orthodoxSaints : catholicSaints)[today.getDate() % 5];
   const feast = feastByTradition(tradition)[today.getDate() % 3];
@@ -1110,7 +1115,7 @@ export function TodayDashboard({ tradition }: { tradition: "orthodox" | "catholi
 
   return (
     <main className="px-4 py-8 md:px-8">
-      <Breadcrumbs items={[{ label: "Home", to: "/" }, { label: tradition === "orthodox" ? "Orthodox" : "Catholic", to: `/${tradition}` }, { label: "Today", to: `/${tradition}/today` }]} />
+      <Breadcrumbs items={[{ label: t('nav.home'), to: "/" }, { label: tradition === "orthodox" ? t('nav.orthodox') : t('nav.catholic'), to: `/${tradition}` }, { label: "Today", to: `/${tradition}/today` }]} />
       <h1 className="font-heading text-4xl text-[var(--text-secondary)]">Daily Dashboard</h1>
       <p className="mt-2">{today.toDateString()} {tradition === "orthodox" ? "- Julian equivalent shown in jurisdictional calendars." : "- Roman Calendar observance."}</p>
       {tradition === "orthodox" && (
@@ -1164,11 +1169,12 @@ export function TodayDashboard({ tradition }: { tradition: "orthodox" | "catholi
 }
 
 export function FastingPage({ tradition }: { tradition: "orthodox" | "catholic" }) {
+  const { t } = useTranslation();
   const levels = ["Strict fast", "Fish allowed", "Wine and oil allowed", "Fish, wine, oil allowed", "Fast-free"];
   const colors = ["bg-red-900", "bg-red-700", "bg-orange-600", "bg-yellow-500", "bg-green-600"];
   return (
     <main className="px-4 py-8 md:px-8">
-      <Breadcrumbs items={[{ label: "Home", to: "/" }, { label: tradition === "orthodox" ? "Orthodox" : "Catholic", to: `/${tradition}` }, { label: "Fasting", to: `/${tradition}/fasting` }]} />
+      <Breadcrumbs items={[{ label: t('nav.home'), to: "/" }, { label: tradition === "orthodox" ? t('nav.orthodox') : t('nav.catholic'), to: `/${tradition}` }, { label: "Fasting", to: `/${tradition}/fasting` }]} />
       <h1 className="font-heading text-4xl text-[var(--text-secondary)]">Fasting Guide</h1>
       <Card className="mt-4">
         <p className="text-lg">Today is a <span className="font-semibold text-[var(--text-secondary)]">{tradition === "orthodox" ? "wine and oil allowed" : "Friday abstinence"}</span> day.</p>
@@ -1281,6 +1287,7 @@ export function GlossaryDetailPage() {
 }
 
 export function SearchPage() {
+  const { t } = useTranslation();
   const [query, setQuery] = useState("");
   const [includeBible, setIncludeBible] = useState(false);
   const [bibleResults, setBibleResults] = useState<Array<{ type: string; title: string; path: string; snippet?: string }>>([]);
@@ -1488,13 +1495,14 @@ export function SearchPage() {
 }
 
 export function BookDetailPage({ tradition }: { tradition: "orthodox" | "catholic" }) {
+  const { t } = useTranslation();
   const { bookSlug } = useParams();
   const data = tradition === "orthodox" ? orthodoxBooks : catholicBooks;
   const book = byId(data, bookSlug);
   if (!book) return <NotFoundContent title="Book not found" />;
   return (
     <main className="px-4 py-8 md:px-8">
-      <Breadcrumbs items={[{ label: "Home", to: "/" }, { label: tradition === "orthodox" ? "Orthodox" : "Catholic", to: `/${tradition}` }, { label: "Resources", to: `/${tradition}/resources` }, { label: book.title, to: `/${tradition}/resources/books/${book.slug}` }]} />
+      <Breadcrumbs items={[{ label: t('nav.home'), to: "/" }, { label: tradition === "orthodox" ? t('nav.orthodox') : t('nav.catholic'), to: `/${tradition}` }, { label: t('sections.resources'), to: `/${tradition}/resources` }, { label: book.title, to: `/${tradition}/resources/books/${book.slug}` }]} />
       <h1 className="font-heading text-4xl text-[var(--text-secondary)]">{book.title}</h1>
       <p className="mt-1">{book.author} • {book.era}</p>
       <div className="mt-4 grid gap-4 md:grid-cols-2">
@@ -1518,6 +1526,7 @@ export function BookDetailPage({ tradition }: { tradition: "orthodox" | "catholi
 }
 
 export function MysteryPage({ tradition }: { tradition: "orthodox" | "catholic" }) {
+  const { t } = useTranslation();
   const { mysterySlug } = useParams();
   const list = tradition === "orthodox" ? orthodoxMysteries : catholicSacraments;
   if (!list.includes(mysterySlug ?? "")) return <NotFoundContent title="Sacrament not found" />;
@@ -1559,7 +1568,7 @@ export function MysteryPage({ tradition }: { tradition: "orthodox" | "catholic" 
   return (
     <main className={`${tradition === 'orthodox' ? 'orthodox-pattern' : 'catholic-pattern'} min-h-screen px-4 py-8 md:px-8`}>
       <div className="mx-auto max-w-6xl">
-        <Breadcrumbs items={[{ label: "Home", to: "/" }, { label: tradition === "orthodox" ? "Orthodox" : "Catholic", to: `/${tradition}` }, { label: "Catechism", to: `/${tradition}/catechism` }, { label: title, to: "#" }]} />
+        <Breadcrumbs items={[{ label: t('nav.home'), to: "/" }, { label: tradition === "orthodox" ? t('nav.orthodox') : t('nav.catholic'), to: `/${tradition}` }, { label: "Catechism", to: `/${tradition}/catechism` }, { label: title, to: "#" }]} />
         <h1 className="font-heading text-4xl text-[var(--text-secondary)] md:text-5xl capitalize">{title}</h1>
         
         {tradition === "orthodox" && (
@@ -1617,13 +1626,14 @@ export function MysteryPage({ tradition }: { tradition: "orthodox" | "catholic" 
 }
 
 export function FathersIndexPage() {
+  const { t } = useTranslation();
   const [query, setQuery] = useState("");
   const [era, setEra] = useState("All");
   const fathers = churchFathers.filter((father) => father.name.toLowerCase().includes(query.toLowerCase()) && (era === "All" || father.era === era));
   return (
     <main className="orthodox-pattern min-h-screen px-4 py-8 md:px-8">
       <div className="mx-auto max-w-6xl">
-        <Breadcrumbs items={[{ label: "Home", to: "/" }, { label: "Orthodox", to: "/orthodox" }, { label: "Fathers", to: "/orthodox/catechism/fathers" }]} />
+        <Breadcrumbs items={[{ label: t('nav.home'), to: "/" }, { label: t('nav.orthodox'), to: "/orthodox" }, { label: "Fathers", to: "/orthodox/catechism/fathers" }]} />
         <h1 className="font-heading text-4xl text-[var(--text-secondary)] md:text-5xl">Church Fathers Library</h1>
         
         <div className="mt-6 space-y-6">
@@ -1689,12 +1699,13 @@ export function FathersIndexPage() {
 }
 
 export function FatherDetailPage() {
+  const { t } = useTranslation();
   const { fatherSlug } = useParams();
   const father = byId(churchFathers, fatherSlug);
   if (!father) return <NotFoundContent title="Father not found" />;
   return (
     <main className="px-4 py-8 md:px-8">
-      <Breadcrumbs items={[{ label: "Home", to: "/" }, { label: "Orthodox", to: "/orthodox" }, { label: "Fathers", to: "/orthodox/catechism/fathers" }, { label: father.name, to: `/orthodox/catechism/fathers/${father.slug}` }]} />
+      <Breadcrumbs items={[{ label: t('nav.home'), to: "/" }, { label: t('nav.orthodox'), to: "/orthodox" }, { label: "Fathers", to: "/orthodox/catechism/fathers" }, { label: father.name, to: `/orthodox/catechism/fathers/${father.slug}` }]} />
       <h1 className="font-heading text-4xl text-[var(--text-secondary)]">{father.name}</h1>
       <p>{father.dates}</p>
       <div className="mt-4 grid gap-4 md:grid-cols-2">
@@ -1791,12 +1802,13 @@ export function CouncilIndexPage() {
 }
 
 export function CouncilDetailPage() {
+  const { t } = useTranslation();
   const { councilSlug } = useParams();
   const council = byId(councils, councilSlug);
   if (!council) return <NotFoundContent title="Council not found" />;
   return (
     <main className="px-4 py-8 md:px-8">
-      <Breadcrumbs items={[{ label: "Home", to: "/" }, { label: "Orthodox", to: "/orthodox" }, { label: "Councils", to: "/orthodox/catechism/councils" }, { label: council.name, to: `/orthodox/catechism/councils/${council.slug}` }]} />
+      <Breadcrumbs items={[{ label: t('nav.home'), to: "/" }, { label: t('nav.orthodox'), to: "/orthodox" }, { label: "Councils", to: "/orthodox/catechism/councils" }, { label: council.name, to: `/orthodox/catechism/councils/${council.slug}` }]} />
       <h1 className="font-heading text-4xl text-[var(--text-secondary)]">{council.name}</h1>
       <p>{council.location} • {council.date} • Convened by {council.emperor}</p>
       <div className="mt-4 grid gap-4 md:grid-cols-2">
@@ -1818,11 +1830,12 @@ export function CouncilDetailPage() {
 }
 
 export function ComparePage() {
+  const { t } = useTranslation();
   const { topic } = useParams();
   if (!compareTopics.includes(topic ?? "")) return <NotFoundContent title="Comparison topic not found" />;
   return (
     <div className="sacred-surface min-h-screen px-4 py-8 md:px-8">
-      <Breadcrumbs items={[{ label: "Home", to: "/" }, { label: "Shared", to: "/shared" }, { label: `Compare ${topic}`, to: `/shared/compare/${topic}` }]} />
+      <Breadcrumbs items={[{ label: t('nav.home'), to: "/" }, { label: t('nav.shared'), to: "/shared" }, { label: `Compare ${topic}`, to: `/shared/compare/${topic}` }]} />
       <h1 className="font-heading text-4xl text-[var(--text-secondary)]">Comparison: {topic?.replace(/-/g, " ")}</h1>
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
         <Card>
