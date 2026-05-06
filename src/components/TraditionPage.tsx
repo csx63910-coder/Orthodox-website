@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import type { PageContent } from "../app/siteData";
 import Card from "./Card";
 import SectionDivider from "./SectionDivider";
@@ -10,24 +11,40 @@ type TraditionPageProps = {
 };
 
 export default function TraditionPage({ content, patternClassName }: TraditionPageProps) {
+  const { t } = useTranslation();
   const location = useLocation();
   const isPrayersPage = location.pathname.includes("/prayers");
   const isCatechismPage = location.pathname.includes("/catechism") && !location.pathname.includes("/fathers") && !location.pathname.includes("/councils") && !location.pathname.includes("/mysteries");
   const tradition = location.pathname.includes("/orthodox") ? "orthodox" : "catholic";
 
+  // Determine i18n key base
+  const pageType = location.pathname.split('/').pop() || 'dashboard';
+  const i18nBase = `content.${tradition}.${pageType}`;
+
+  // Use translated content if available, otherwise fallback to prop
+  const displayTitle = t(`${i18nBase}.title`) !== `${i18nBase}.title` ? t(`${i18nBase}.title`) : content.title;
+  const displaySubtitle = t(`${i18nBase}.subtitle`) !== `${i18nBase}.subtitle` ? t(`${i18nBase}.subtitle`) : content.subtitle;
+  
+  // Handle paragraphs - check if translated array exists
+  const paragraphs = content.paragraphs.map((p, idx) => {
+    const key = `${i18nBase}.p${idx + 1}`;
+    const translated = t(key);
+    return translated !== key ? translated : p;
+  });
+
   return (
     <main className={`min-h-screen px-4 py-8 md:px-8 ${patternClassName}`}>
       <motion.section initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
-        <h1 className="font-heading text-3xl leading-tight text-[var(--text-secondary)] md:text-5xl">{content.title}</h1>
-        <p className="mt-3 max-w-3xl text-lg text-[var(--text-primary)]/90">{content.subtitle}</p>
+        <h1 className="font-heading text-3xl leading-tight text-[var(--text-secondary)] md:text-5xl">{displayTitle}</h1>
+        <p className="mt-3 max-w-3xl text-lg text-[var(--text-primary)]/90">{displaySubtitle}</p>
       </motion.section>
 
-      <SectionDivider label="Kyrie Eleison" />
+      <SectionDivider label={t('sidebar.kyrie') || "Kyrie Eleison"} />
 
       <section className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
         <div className="space-y-4">
-          {content.paragraphs.map((paragraph) => (
-            <p key={paragraph} className="drop-cap text-lg leading-relaxed text-[var(--text-primary)]/88">
+          {paragraphs.map((paragraph, idx) => (
+            <p key={idx} className="drop-cap text-lg leading-relaxed text-[var(--text-primary)]/88">
               {paragraph}
             </p>
           ))}
