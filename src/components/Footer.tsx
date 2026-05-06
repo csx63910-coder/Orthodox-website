@@ -1,14 +1,17 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import ThemeSelector from "./ThemeSelector";
 
-const links = [
-  { label: "About", to: "/shared" },
-  { label: "Contact", to: "/shared" },
-  { label: "Prayer Requests", to: "/candle" },
-  { label: "Donate", to: "/shared" },
-];
-
 export default function Footer() {
+  const { t } = useTranslation();
+  
+  const links = [
+    { label: t('footer.about'), to: "/shared" },
+    { label: t('footer.contact'), to: "/shared" },
+    { label: t('footer.prayer_requests'), to: "/candle" },
+    { label: t('footer.donate'), to: "/shared" },
+  ];
+
   return (
     <footer className="border-t border-[var(--border)]/40 bg-[var(--bg-secondary)] px-4 py-8">
       <div className="mx-auto grid w-full max-w-7xl gap-4 md:grid-cols-[1fr_auto] md:items-center">
@@ -20,8 +23,8 @@ export default function Footer() {
               </Link>
             ))}
           </div>
-          <p className="text-xs text-[var(--text-primary)]/70">Built for the Glory of God</p>
-          <p className="text-xs text-[var(--text-primary)]/60">© {new Date().getFullYear()} The Ancient Path</p>
+          <p className="text-xs text-[var(--text-primary)]/70">{t('footer.glory')}</p>
+          <p className="text-xs text-[var(--text-primary)]/60">{t('footer.copyright', { year: new Date().getFullYear() })}</p>
         </div>
         <ThemeSelector />
       </div>
