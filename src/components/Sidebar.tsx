@@ -1,8 +1,10 @@
 import { ChevronDown } from "lucide-react";
 import { useMemo, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import type { SidebarSection } from "../app/siteData";
 import { cn } from "../utils/cn";
+import LanguageTranslator from "./LanguageTranslator";
 
 type SidebarProps = {
   title: string;
@@ -13,7 +15,12 @@ type SidebarProps = {
 };
 
 export default function Sidebar({ title, titleHref, sections, mobileOpen, onCloseMobile }: SidebarProps) {
+  const { t } = useTranslation();
   const location = useLocation();
+
+  const getSectionKey = (title: string) => {
+    return `sections.${title.toLowerCase().replace(/ & /g, '_').replace(/ /g, '_').replace(/'/g, '')}`;
+  };
   const defaultOpen = useMemo(() => new Set(sections.map((section) => section.path)), [sections]);
   const [openSections, setOpenSections] = useState(defaultOpen);
   const orthodoxScriptureButtons = new Set([
@@ -160,7 +167,7 @@ export default function Sidebar({ title, titleHref, sections, mobileOpen, onClos
                 >
                   <span className="flex items-center gap-2">
                     <section.icon size={14} className="text-[var(--text-secondary)]" />
-                    {section.title}
+                    {t(getSectionKey(section.title))}
                   </span>
                   <ChevronDown size={14} className={cn("transition-transform", isOpen && "rotate-180")} />
                 </button>
@@ -176,7 +183,7 @@ export default function Sidebar({ title, titleHref, sections, mobileOpen, onClos
                           : "border-transparent text-[var(--text-primary)]/85 hover:text-[var(--text-secondary)]"
                       )}
                     >
-                      Open {section.title}
+                      {t('sidebar.open')} {t(getSectionKey(section.title))}
                     </NavLink>
                     {section.subItems.map((item) => {
                       const linkedPath = linkedSubItems[section.path]?.[item];
@@ -446,6 +453,21 @@ export default function Sidebar({ title, titleHref, sections, mobileOpen, onClos
               </div>
             );
           })}
+          
+          {/* Bottom Actions */}
+          <div className="mt-4 border-t border-[var(--border)]/30 pt-4 px-2 pb-6">
+            <div className="flex flex-col gap-4">
+              <div className="px-2">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-primary)]/40 mb-3">
+                  {t('sidebar.system_settings')}
+                </p>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-[var(--text-secondary)]">{t('sidebar.language')}</span>
+                  <LanguageTranslator />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </aside>
     </>
